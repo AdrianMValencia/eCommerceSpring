@@ -8,6 +8,7 @@ import com.amechato.ecommerce_api.backend.domain.ports.IOrderRepository;
 import com.amechato.ecommerce_api.backend.infrastructure.mappers.OrderMapper;
 import com.amechato.ecommerce_api.backend.infrastructure.persistence.entities.OrderEntity;
 import com.amechato.ecommerce_api.backend.infrastructure.persistence.entities.UserEntity;
+import java.util.Optional;
 
 @Repository
 public class OrderCrudRepositoryImpl implements IOrderRepository {
@@ -41,15 +42,22 @@ public class OrderCrudRepositoryImpl implements IOrderRepository {
     @Override
     public Order save(Order order) {
         OrderEntity orderEntity = _mapper.toOrderEntity(order);
-        orderEntity.getOrderDetails().forEach(detail -> detail.setOrderEntity(orderEntity));
+        if (orderEntity.getOrderDetails() != null) {
+            orderEntity.getOrderDetails().forEach(detail -> detail.setOrderEntity(orderEntity));
+        }
         return _mapper.toOrder(_repository.save(orderEntity));
     }
 
     @Override
+    public Optional<Order> findByPaypalOrderId(String paypalOrderId) {
+        return _repository.findByPaypalOrderId(paypalOrderId).map(_mapper::toOrder);
+    }
+
+    @Override
     public void updateStateById(Integer id, String state) {
-        if (state.equals(OrderState.CANCELLED.name())) {
-            _repository.updateStateById(id, OrderState.CANCELLED.name());
-        } else {
+        try {
+            _repository.updateStateById(id, OrderState.valueOf(state).name());
+        } catch (IllegalArgumentException ex) {
             _repository.updateStateById(id, OrderState.CONFIRMED.name());
         }
     }

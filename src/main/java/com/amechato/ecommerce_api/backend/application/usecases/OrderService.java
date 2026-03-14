@@ -2,6 +2,7 @@ package com.amechato.ecommerce_api.backend.application.usecases;
 
 import com.amechato.ecommerce_api.backend.domain.models.Order;
 import com.amechato.ecommerce_api.backend.domain.ports.IOrderRepository;
+import java.util.Optional;
 
 public class OrderService {
 
@@ -25,6 +26,10 @@ public class OrderService {
 
     public Order save(Order order) {
         return _repository.save(order);
+    }
+
+    public Optional<Order> findByPaypalOrderId(String paypalOrderId) {
+        return _repository.findByPaypalOrderId(paypalOrderId);
     }
 
     public void updateStateById(Integer id, String state) {

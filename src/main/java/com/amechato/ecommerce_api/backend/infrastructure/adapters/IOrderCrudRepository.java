@@ -3,6 +3,7 @@ package com.amechato.ecommerce_api.backend.infrastructure.adapters;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import java.util.Optional;
 
 import com.amechato.ecommerce_api.backend.infrastructure.persistence.entities.OrderEntity;
 import com.amechato.ecommerce_api.backend.infrastructure.persistence.entities.UserEntity;
@@ -17,4 +18,6 @@ public interface IOrderCrudRepository extends CrudRepository<OrderEntity, Intege
     void updateStateById(Integer id, String state);
 
     Iterable<OrderEntity> findByUserEntity(UserEntity userEntity);
+
+    Optional<OrderEntity> findByPaypalOrderId(String paypalOrderId);
 }

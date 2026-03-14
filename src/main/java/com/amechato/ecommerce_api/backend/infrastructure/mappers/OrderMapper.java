@@ -16,6 +16,11 @@ public interface OrderMapper {
             @Mapping(source = "orderDate", target = "orderDate"),
             @Mapping(source = "orderDetails", target = "orderDetails"),
             @Mapping(source = "orderState", target = "orderState"),
+            @Mapping(source = "paymentProvider", target = "paymentProvider"),
+            @Mapping(source = "paymentStatus", target = "paymentStatus"),
+            @Mapping(source = "paypalOrderId", target = "paypalOrderId"),
+            @Mapping(source = "paypalCaptureId", target = "paypalCaptureId"),
+            @Mapping(source = "paidAt", target = "paidAt"),
             @Mapping(source = "userEntity.id", target = "userId")
     })
 

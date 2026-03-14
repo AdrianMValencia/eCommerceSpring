@@ -23,16 +23,25 @@ public class UserController {
     
     @PostMapping()
     public User save(@RequestBody User user) {
-        return this.userService.save(user);
+        return sanitize(this.userService.save(user));
     }
 
     @GetMapping("/{id}")
     public User findById(@PathVariable Integer id) {
-        return this.userService.findById(id);
+        return sanitize(this.userService.findById(id));
     }
 
     @GetMapping("/by-email")
     public User getByEmail(@RequestParam String email) {
-        return this.userService.findByEmail(email);
+        return sanitize(this.userService.findByEmail(email));
+    }
+
+    private User sanitize(User user) {
+        if (user == null) {
+            return null;
+        }
+
+        user.setPassword(null);
+        return user;
     }
 }

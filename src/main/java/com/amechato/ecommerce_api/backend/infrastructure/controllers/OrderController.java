@@ -40,10 +40,10 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Order> save(@RequestBody Order order) {
-        if (order.getOrderState().toString().equals(OrderState.CANCELLED.toString())) {
+        if (order.getOrderState() != null && order.getOrderState().toString().equals(OrderState.CANCELLED.toString())) {
             order.setOrderState(OrderState.CANCELLED);
         } else {
-            order.setOrderState(OrderState.CONFIRMED);
+            order.setOrderState(OrderState.CREATED);
         }
 
         return ResponseEntity.ok(_orderService.save(order));

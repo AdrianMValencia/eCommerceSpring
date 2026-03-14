@@ -5,11 +5,10 @@ import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.amechato.ecommerce_api.backend.domain.models.OrderDetail;
 import com.amechato.ecommerce_api.backend.domain.models.OrderState;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -38,6 +37,19 @@ public class OrderEntity {
 
     @Enumerated(value = EnumType.STRING)
     private OrderState orderState;
+
+    @Column(length = 30)
+    private String paymentProvider;
+
+    @Column(length = 30)
+    private String paymentStatus;
+
+    @Column(unique = true)
+    private String paypalOrderId;
+
+    private String paypalCaptureId;
+
+    private LocalDateTime paidAt;
 
     @ManyToOne
     private UserEntity userEntity;

@@ -8,6 +8,95 @@ Controllers detectados:
 - `ProductController` (`/api/products`)
 - `UserController` (`/api/users`)
 - `OrderController` (`/api/orders`)
+- `AuthController` (`/api/auth`)
+
+## Seguridad JWT Y Roles
+
+Reglas activas de autorizacion:
+
+1. `POST /api/auth/login`: publico.
+2. `POST /api/users`: publico (registro).
+3. `OrderController` (`/api/orders/**`): solo `ADMIN`.
+4. `PayPalPaymentController` (`/api/payments/paypal/**`): solo `ADMIN`.
+5. Resto de endpoints (`categories`, `products`, `users` de lectura, etc.): `USER` o `ADMIN` autenticados.
+
+Header requerido para endpoints protegidos:
+
+`Authorization: Bearer <token-jwt>`
+
+## Endpoint De Login (Para React)
+
+### POST `/api/auth/login`
+
+- Metodo HTTP: `POST`
+- Acceso: Publico
+- Request:
+
+```json
+{
+  "email": "john@demo.com",
+  "password": "123456"
+}
+```
+
+- Response 200:
+
+```json
+{
+  "token": "<JWT>",
+  "userId": 1,
+  "email": "john@demo.com",
+  "userType": "USER"
+}
+```
+
+- Response 401 (credenciales invalidas):
+
+```json
+{
+  "code": "AUTH_ERROR",
+  "message": "Invalid credentials",
+  "timestamp": "2026-03-14T12:00:00Z",
+  "path": "uri=/api/auth/login"
+}
+```
+
+## Integracion Frontend React (Login)
+
+Ejemplo con `axios`:
+
+```ts
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: 'http://localhost:8080/api'
+});
+
+type LoginRequest = {
+  email: string;
+  password: string;
+};
+
+type LoginResponse = {
+  token: string;
+  userId: number;
+  email: string;
+  userType: 'USER' | 'ADMIN';
+};
+
+export const login = async (payload: LoginRequest): Promise<LoginResponse> => {
+  const { data } = await api.post<LoginResponse>('/auth/login', payload);
+  localStorage.setItem('token', data.token);
+  localStorage.setItem('userType', data.userType);
+  localStorage.setItem('userId', String(data.userId));
+  return data;
+};
+
+export const authHeader = () => {
+  const token = localStorage.getItem('token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+```
 
 Total de endpoints: **16**
 

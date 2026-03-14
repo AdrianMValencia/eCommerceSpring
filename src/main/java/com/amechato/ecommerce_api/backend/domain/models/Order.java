@@ -14,6 +14,11 @@ public class Order {
     private List<OrderDetail> orderDetails;
     private OrderState orderState;
     private Integer userId;
+    private String paymentProvider;
+    private String paymentStatus;
+    private String paypalOrderId;
+    private String paypalCaptureId;
+    private LocalDateTime paidAt;
 
 
     public Order() {
